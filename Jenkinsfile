@@ -1,16 +1,20 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Clone Repository') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[url: 'https://github.com/omriganini/DevOps.git']]
-                ])
-            }
+stage('Clone Repository') {
+    steps {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: '*/main']],
+            userRemoteConfigs: [[url: 'https://github.com/omriganini/DevOps.git']]
+        ])
+        script {
+            sh '''
+            echo "Current directory:"
+            pwd
+            echo "Workspace contents after cloning:"
+            ls -la
+            '''
         }
+    }
+}
 
         stage('Build Docker Images') {
             steps {
