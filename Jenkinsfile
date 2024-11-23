@@ -4,7 +4,11 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/omriganini/DevOps.git'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/omriganini/DevOps.git']]
+                ])
             }
         }
 
@@ -18,7 +22,9 @@ pipeline {
 
         stage('Push Docker Images to Docker Hub') {
             steps {
-                script {
+                withCredentials([
+                    usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')
+                ]) {
                     sh '''
                     docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                     docker-compose push
