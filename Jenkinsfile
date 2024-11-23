@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'git@github.com:omriganini/DevOps.git'
+                git 'https://github.com/omriganini/DevOps.git'
             }
         }
 
